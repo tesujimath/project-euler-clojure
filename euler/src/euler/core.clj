@@ -7,6 +7,20 @@
                              (zero? (rem x 5))))
   (reduce + (filter my-multiple? (range 1 1000))))
 
+(defn fib
+  "Lazy sequence of Fibonacci numbers."
+  ([]
+   (fib 1 1))
+  ([a b]
+   (lazy-seq (cons a (fib b (+ a b))))))
+
+(defn fib-not-exceeding [n]
+  "Fibonacci sequence of terms not exceeding `n`"
+  (take-while (partial >= n) (fib)))
+
+(defn e02-even-fibonacci-numbers []
+  (reduce + (filter even? (fib-not-exceeding 4000000))))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
