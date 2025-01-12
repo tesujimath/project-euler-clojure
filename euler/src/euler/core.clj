@@ -26,6 +26,39 @@
 (defn e02-even-fibonacci-numbers []
   (reduce + (filter even? (fib-not-exceeding 4000000))))
 
+(defn sieve []
+  "Sieve of Eratosthenes, hopelessly inefficient but very fun."
+  (map first (iterate
+              (fn [[p candidates]]
+                (let [p1 (first candidates)
+                      candidates' (rest candidates)]
+                  [p1
+                   (filter (fn [x] (not (multiple? p1 x)))
+                           candidates')]))
+              [2 (iterate (fn [x] (+ 2 x)) 3)]
+              )))
+
+(def primes (sieve))
+
+(defn prime-factors [n]
+  "Return list of prime factors of `n`."
+  (loop [q n
+         factors nil
+         candidates primes
+         ]
+    (if (= q 1)
+      factors
+      (let [p (first candidates)]
+        (if (multiple? p q)
+          (recur (quot q p) (cons p factors) candidates)
+          (recur q factors (rest candidates))
+          )))
+    )
+  )
+
+(defn e03-largest-prime-factor []
+  (first (prime-factors 600851475143)))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
